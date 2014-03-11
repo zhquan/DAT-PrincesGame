@@ -63,7 +63,8 @@ var princessesCaught = 0;
 
 // Handle keyboard controls
 var keysDown = {};
-
+var punto = 0;
+var puntos = 0;
 addEventListener("keydown", function (e) {
 	keysDown[e.keyCode] = true;
 }, false);
@@ -135,6 +136,7 @@ var reset = function () {
     }
 };
 // Update game objects
+
 var update = function (modifier) {
     // monster move
     for (i=0;i<monsters.length;i++){
@@ -203,8 +205,8 @@ var update = function (modifier) {
 		&& princess.y <= (hero.y + 32)
 	) {
 		++princessesCaught;
+        punto = localStorage.setItem("max", princessesCaught);
         if((princessesCaught % 10) == 0){
-            console.log(hero.speed);
             n_stone++;
         }
         if((princessesCaught % 15) == 0){
@@ -221,6 +223,10 @@ var update = function (modifier) {
 	        && monsters[i].y <= (hero.y + 32)
         ){
             monsters[i].speed = 50;
+            punto = localStorage.getItem("max");
+            if (punto > puntos){
+                puntos = punto;
+            }
             princessesCaught = 0;
             n_monster = 1;
             n_stone = 1;
@@ -309,6 +315,7 @@ var render = function () {
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.fillText("Princesses caught: " + princessesCaught, 32, 32);
+    ctx.fillText("Max: " + puntos, 32,52);
 };
 
 // The main game loop
