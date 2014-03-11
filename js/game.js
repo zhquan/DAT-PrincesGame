@@ -80,7 +80,7 @@ var reset = function () {
 	// Throw the princess somewhere on the screen randomly
     var px = 60 + (Math.random() * (canvas.width - 64))
     var py = 60 + (Math.random() * (canvas.height - 64));
-    while ((px == hero.x) && (py == hero.y)){
+    while ((px == hero.x) && (py == hero.y) || (px > (canvas.width-64)) || (px < 60) || (py < 60) || (py > (canvas.height - 60))){
         px = 60 + (Math.random() * (canvas.width - 64))
         py = 60 + (Math.random() * (canvas.height - 64));
     }
@@ -97,7 +97,8 @@ var reset = function () {
         var monster = {};
         var mx = 60 + (Math.random() * (canvas.width - 64));
         var my = 60 + (Math.random() * (canvas.height - 64));
-        while (((mx == hero.x) && (my == hero.y)) || ((px == mx)&&(py == my))){
+        while (((mx < hero.x+50) && (my < hero.y+50)) 
+                ||((px == mx)&&(py == my))){
             mx = 60 + (Math.random() * (canvas.width - 64));
             my = 60 + (Math.random() * (canvas.height - 64));
         }
@@ -108,7 +109,7 @@ var reset = function () {
         if (my > 420)
             my = 420;
 	    monster.y = my;
-        monster.speed = 5;
+        monster.speed = 50;
         monsters.push(monster);
     }
 
@@ -118,7 +119,8 @@ var reset = function () {
         var stone = {};
         var sx = 60 + (Math.random() * (canvas.width - 64));
         var sy = 60 + (Math.random() * (canvas.height - 64));
-        while (((hero.x == sx)&&(hero.y == sy))||((sx == py)&&(sy == py))){
+        while (((hero.x < sx+30)&&(hero.y < sy+30))
+                || ((sx < py+30)&&(sy < py+30))){
             sx = 60 + (Math.random() * (canvas.width - 64));
             sy = 60 + (Math.random() * (canvas.height - 64));
         }
@@ -218,7 +220,7 @@ var update = function (modifier) {
 	        && hero.y <= (monsters[i].y + 16)
 	        && monsters[i].y <= (hero.y + 32)
         ){
-            monsters[i].speed = 5;
+            monsters[i].speed = 50;
             princessesCaught = 0;
             n_monster = 1;
             n_stone = 1;
@@ -227,14 +229,15 @@ var update = function (modifier) {
     }
     // hero vs stone
     for(i=0; i<stones.length; i++){
+        var x = hero.x - (stones[i].x + 16);
+        var y = hero.y;
         if (
             hero.x <= (stones[i].x + 16)
 	        && stones[i].x <= (hero.x + 16)
 	        && hero.y <= (stones[i].y + 16)
 	        && stones[i].y <= (hero.y + 32)
         ){
-            var x = hero.x;
-            var y = hero.y;
+            
             if (38 in keysDown) { // Player holding up
                 hero.y = stones[i].y+16;
             }
